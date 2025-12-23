@@ -267,106 +267,100 @@ export default class GameModule {
 			// Perform the save screenshot request for the car
 			await gameFunction.saveScreenshot(body);
 
-			// Check obtained crown
-			let getCarCrown = await prisma.carCrownDetect.findFirst({
-				where:{
-					carId: body.carId,
-					playedAt: body.playedAt,
-				}
-			});
-
-			if(getCarCrown)
+			if (body.imageType == 7)
 			{
-				if(getCarCrown.status === 'finish')
+				// Check obtained crown
+				let getCarCrown = await prisma.carCrownDetect.findFirst({
+					where:{
+						carId: body.carId,
+						playedAt: body.playedAt
+					}
+				});
+
+				if(getCarCrown)
 				{
-					let timestamp = body.playedAt - body.timestamp;
-
-					if(timestamp <= 30)
+					if(getCarCrown.status === 'finish')
 					{
-						console.log('Crown Force Finish Detected');
+						let timestamp = body.playedAt - body.timestamp;
 
-						// Update the user status
-						await prisma.carCrownDetect.update({
-							where:{
-								id: getCarCrown.id
-							},
-							data:{
-								status: 'forcefinish'
-							}
-						});
-
-						// Restore the old crown
-						await prisma.carCrown.update({
-							where:{
-								area: getCarCrown.area!
-							},
-							data:{
-								carId: getCarCrown.opponentCarId!,
-								area: getCarCrown.area!,
-								ramp: getCarCrown.ramp!,
-								path: getCarCrown.path!,
-								playedAt: getCarCrown.playedAt!,
-								tunePower: getCarCrown.tunePower!,
-								tuneHandling: getCarCrown.tuneHandling!,
-							}
-						});
-
-						await prisma.ghostTrail.updateMany({
-							where:{
-								area: getCarCrown.area!,
-								crownBattle: true
-							},
-							data:{
-								carId: getCarCrown.opponentCarId!,
-								area: getCarCrown.area!,
-								ramp: getCarCrown.ramp!,
-								path: getCarCrown.path!,
-								playedAt: getCarCrown.playedAt!,
-								tunePower: getCarCrown.tunePower!,
-								tuneHandling: getCarCrown.tuneHandling!,
-								trail: getCarCrown.trail!
-							}
-						});
-
-						// Banned the user
-						let getUserId = await prisma.car.findFirst({
-							where:{
-								carId: body.carId
-							},
-							select:{
-								userId: true
-							}
-						})
-
-						if(getUserId)
+						if(timestamp <= 30)
 						{
-							await prisma.user.update({
+							console.log('Crown Force Finish Detected');
+
+							// Update the user status
+							await prisma.carCrownDetect.update({
 								where:{
-									id: getUserId.userId
+									id: getCarCrown.id
 								},
 								data:{
-									userBanned: true
+									status: 'forcefinish'
+								}
+							});
+
+							// Restore the old crown
+							await prisma.carCrown.update({
+								where:{
+									area: getCarCrown.area!
+								},
+								data:{
+									carId: getCarCrown.opponentCarId!,
+									area: getCarCrown.area!,
+									ramp: getCarCrown.ramp!,
+									path: getCarCrown.path!,
+									playedAt: getCarCrown.playedAt!,
+									tunePower: getCarCrown.tunePower!,
+									tuneHandling: getCarCrown.tuneHandling!,
+								}
+							});
+
+							await prisma.ghostTrail.updateMany({
+								where:{
+									area: getCarCrown.area!,
+									crownBattle: true
+								},
+								data:{
+									carId: getCarCrown.opponentCarId!,
+									area: getCarCrown.area!,
+									ramp: getCarCrown.ramp!,
+									path: getCarCrown.path!,
+									playedAt: getCarCrown.playedAt!,
+									tunePower: getCarCrown.tunePower!,
+									tuneHandling: getCarCrown.tuneHandling!,
+									trail: getCarCrown.trail!
+								}
+							});
+
+							// Banned the user
+							let getUserId = await prisma.car.findFirst({
+								where:{
+									carId: body.carId
+								},
+								select:{
+									userId: true
+								}
+							})
+
+							if(getUserId)
+							{
+								await prisma.user.update({
+									where:{
+										id: getUserId.userId
+									},
+									data:{
+										userBanned: true
+									}
+								});
+							}
+
+							// Delete forced finish entries
+							await prisma.carCrownDetect.delete({
+								where: {
+									id: getCarCrown.id
 								}
 							});
 						}
 					}
 				}
-			}
-
-			// Remove retire entries
-			let retireCount = await prisma.carCrownDetect.findMany({
-				where: {
-					status: 'retire'
-				}
-			});
-
-			if (retireCount.length > 0)
-			{
-				await prisma.carCrownDetect.deleteMany({
-					where: {
-						status: 'retire'
-					}
-				});
 			}
 
 			// Response data

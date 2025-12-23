@@ -428,8 +428,21 @@ export async function getScratchItemList (userId: number, date: number)
     // Get all of the user's scratch items from the database
     let scratchUserItems = await prisma.userItem.findMany({
         where: {
-            userId: userId, 
-            type: 1 // Scratch Item
+            userId: userId,
+            OR: [
+                {
+                    category: {
+                        in: [
+                            25, // wm.wm.protobuf.ItemCategory.CAT_WINDOW_DECORATION
+                            26  // wm.wm.protobuf.ItemCategory.CAT_RIVAL_MARKER
+                        ]
+                    }
+                },
+                {
+                    category: 201, // wm.wm.protobuf.ItemCategory.CAT_CAR_TICKET,
+                    itemId: { in: [1, 2, 3, 4, 5, 6, 16, 17, 18, 19, 20, 21] } // only scratched cars
+                }
+            ]
         }
     });
 
