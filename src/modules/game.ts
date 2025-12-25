@@ -14,6 +14,8 @@ import * as story from "./game/story";
 import * as time_attack from "./game/time_attack";
 import * as ghost from "./game/ghost";
 import * as versus from "./game/versus";
+import * as util from 'util';
+
 
 
 export default class GameModule {
@@ -266,14 +268,15 @@ export default class GameModule {
 			
 			// Perform the save screenshot request for the car
 			await gameFunction.saveScreenshot(body);
-
-			if (body.imageType == 7)
+			
+			if (body.imageType == 1)
 			{
 				// Check obtained crown
 				let getCarCrown = await prisma.carCrownDetect.findFirst({
 					where:{
 						carId: body.carId,
-						playedAt: body.playedAt
+						area: body.ghostMetadata?.area,
+						opponentCarId: body.ghostMetadata?.opponents![0].carId
 					}
 				});
 
@@ -283,7 +286,7 @@ export default class GameModule {
 					{
 						let timestamp = body.playedAt - body.timestamp;
 
-						if(timestamp <= 30)
+						if(timestamp <= 60)
 						{
 							console.log('Crown Force Finish Detected');
 
