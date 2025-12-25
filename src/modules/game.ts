@@ -16,7 +16,6 @@ import * as ghost from "./game/ghost";
 import * as versus from "./game/versus";
 
 
-
 export default class GameModule {
     register(app: Application): void {
 
