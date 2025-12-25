@@ -104,6 +104,8 @@ export async function getStampTarget(carId: number, arrayCarId: number[])
                     recommended: getStampTargets[i].recommended
                 })
             );
+
+            
         }
     }
 

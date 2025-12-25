@@ -450,7 +450,9 @@ export async function saveScreenshot(body: wm.protobuf.SaveScreenshotRequest)
     // Screenshot feature enabled
     if(enableScreenshot === 1)
     {
-        let filename = `${body.timestamp}_${body.carId}_${body.imageType}.jpeg`;
+        let filename: string | undefined = undefined;
+
+        filename = `${body.timestamp}_${body.carId}_${body.imageType}.png`;
 
         let dir = path.join('screenshot');
 
@@ -466,7 +468,7 @@ export async function saveScreenshot(body: wm.protobuf.SaveScreenshotRequest)
             if (err)
             {
                 console.log(err);
-            }
+            }   
             else 
             {
                 console.log(`Screenshot saved successfully as '${filename}'`)
