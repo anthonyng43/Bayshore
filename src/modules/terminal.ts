@@ -16,41 +16,20 @@ export default class TerminalModule {
     register(app: Application): void {
 
         // Load upon enter terminal
-		app.post('/method/load_terminal_information', async (req, res) => {
+		app.post('/method/load_terminal_information', (req, res) => {
 
             // Get the request body for the load terminal information request
             let body = wm.wm.protobuf.LoadTerminalInformationRequest.decode(req.body);
 
-			let prizeReceivable = false;
-
-			// Get all of the user's items from the database
-			let userItems = await prisma.userItem.findMany({
-				where: {
-					userId: body.userId,
-					NOT: [
-						{ category: { in: [25, 26] } }, // exclude scratch items
-						{
-							AND: [
-							{ category: 201 }, // exclude scratch car
-							{ itemId: { in: [1, 2, 3, 4, 5, 6, 16, 17, 18, 19, 20, 21] } }
-							]
-						}
-					]
-				}
-			});
-
-			if (userItems.length > 0) { prizeReceivable = true; }
-
             // Response data
 			let msg = {
 				error: wm.wm.protobuf.ErrorCode.ERR_SUCCESS,
-				prizeReceivable: prizeReceivable,
+				prizeReceivable: false,
 				transferNotice: {
 					needToSeeTransferred: false
 				},
 				announceFeature: false,
-				freeScratched: true,
-				availableTickets: userItems,
+				freeScratched: true
 			}
 
             // Encode the response
@@ -1179,55 +1158,26 @@ export default class TerminalModule {
         });
 
 
+		/*
 		app.post('/method/load_unreceived_user_items', async (req, res) => {
 
 			// Get the information from the request
 			let body = wm.wm.protobuf.LoadUnreceivedUserItemsRequest.decode(req.body);
 
-			// Owned user items list
-			let ownedUserItems : wm.wm.protobuf.UserItem[] = [];
+			// Response data
+            let msg = {
+				error: wmsrv.wm.protobuf.ErrorCode.ERR_SUCCESS,
+			};
 
-			// Get all of the user's items from the database
-			let userItems = await prisma.userItem.findMany({
-				where: {
-					userId: body.userId,
-					NOT: [
-						{ category: { in: [25, 26] } }, // exclude scratch items
-						{
-							AND: [
-							{ category: 201 },
-							{ itemId: { in: [1, 2, 3, 4, 5, 6, 16, 17, 18, 19, 20, 21] } }
-							]
-						}
-					]
-				}
-			});
-
-			// Loop over all of the returned items
-			for(let item of userItems)
-			{
-				// Add all of the items to the list
-				ownedUserItems.push(wm.wm.protobuf.UserItem.create({
-					category: item.category, 
-					itemId: item.itemId, 
-					userItemId: item.userItemId,
-					earnedAt: item.earnedAt
-					// no expiration date
-				}));
-			}
-
-			// Encode the response
-			let message = wm.wm.protobuf.LoadUnreceivedUserItemsResponse.encode({
-				error: wm.wm.protobuf.ErrorCode.ERR_SUCCESS,
-				ownedUserItems: ownedUserItems
-			});
+            // Encode the response
+			let message = wmsrv.wm.protobuf.LoadUnreceivedUserItemsResponse.encode(msg);
 
 			// Send the response to the client
-			common.sendResponse(message, res, req.rawHeaders);
+            common.sendResponse(message, res, req.rawHeaders);
 		})
 
 
-		/*app.post('/method/check_item_receivable_cars', async (req, res) => {
+		app.post('/method/check_item_receivable_cars', async (req, res) => {
 
 			// Get the information from the request
 			let body = wm.wm.protobuf.CheckItemReceivableCarsRequest.decode(req.body);

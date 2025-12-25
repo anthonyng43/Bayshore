@@ -349,7 +349,7 @@ export async function saveGhostBattleResult(body: wm.protobuf.SaveGameResultRequ
                             {
                                 // Crown Finish Status
                                 await prisma.carCrownDetect.create({
-                                    data: {
+                                    data:{
                                         carId: body.carId,
                                         status: 'finish',
                                         area: carCrowns.area,
@@ -721,6 +721,14 @@ export async function saveGhostBattleResult(body: wm.protobuf.SaveGameResultRequ
     else if(body.rgResult!.selectionMethod === wmproto.wm.protobuf.GhostSelectionMethod.GHOST_SELECT_CROWN_MATCH)
     {
         console.log('Crown Ghost Mode Found but Retiring');
+
+        // Crown Finish Status
+        await prisma.carCrownDetect.create({
+            data:{
+                carId: body.carId,
+                status: 'retire',
+            }
+        });
     }
 
     // Return the value to 'BASE_PATH/src/modules/game.ts'

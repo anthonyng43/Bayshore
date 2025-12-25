@@ -16,6 +16,7 @@ import * as ghost from "./game/ghost";
 import * as versus from "./game/versus";
 
 
+
 export default class GameModule {
     register(app: Application): void {
 
@@ -362,6 +363,22 @@ export default class GameModule {
 						}
 					}
 				}
+			}
+
+			// Remove retire entries
+			let retireCount = await prisma.carCrownDetect.findMany({
+				where: {
+					status: 'retire'
+				}
+			});
+
+			if (retireCount.length > 0)
+			{
+				await prisma.carCrownDetect.deleteMany({
+					where: {
+						status: 'retire'
+					}
+				});
 			}
 
 			// Response data
