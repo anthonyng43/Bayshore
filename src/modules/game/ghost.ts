@@ -323,10 +323,12 @@ export async function saveGhostBattleResult(body: wm.protobuf.SaveGameResultRequ
                                     data: {
                                         carId: body.carId,
                                         status: 'finish',
-                                        area: area,
-                                        ramp: ramp,
-                                        path: path,
-                                        ...dataCrown
+                                        area: carCrowns.area,
+                                        ramp: carCrowns.ramp,
+                                        path: carCrowns.path,
+                                        playedAt: carCrowns.playedAt,
+                                        tunePower: carCrowns.tunePower,
+                                        tuneHandling: carCrowns.tuneHandling
                                     }
                                 });
 
@@ -350,10 +352,12 @@ export async function saveGhostBattleResult(body: wm.protobuf.SaveGameResultRequ
                                     data: {
                                         carId: body.carId,
                                         status: 'finish',
-                                        area: area,
-                                        ramp: ramp,
-                                        path: path,
-                                        ...dataCrown
+                                        area: carCrowns.area,
+                                        ramp: carCrowns.ramp,
+                                        path: carCrowns.path,
+                                        playedAt: carCrowns.playedAt,
+                                        tunePower: carCrowns.tunePower,
+                                        tuneHandling: carCrowns.tuneHandling
                                     }
                                 });
 
