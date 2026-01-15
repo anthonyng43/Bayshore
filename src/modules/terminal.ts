@@ -650,7 +650,7 @@ export default class TerminalModule {
 			});
 
 			// Declare GhostCompetitionSchedule
-            let compeSch; 
+            let compeSch;
 			let msg: any;
 
             if(ocmEventDate)
@@ -794,7 +794,7 @@ export default class TerminalModule {
 							}));
 						}
 
-						if(!(ownRecords))
+						if(!ownRecords)
 						{
 							let ocmPersonalRank = [{ result: 0, position: 0 }];
 
@@ -991,7 +991,7 @@ export default class TerminalModule {
 							}));
 						}
 
-						if(!(ownRecords))
+						if(!ownRecords)
 						{
 							let ocmPersonalRank = [{ result: 0, position: 0 }];
 
@@ -1091,7 +1091,7 @@ export default class TerminalModule {
 					}
 				});
 
-				if(!(checkRegisteredGhost))
+				if(!checkRegisteredGhost)
 				{
 					await prisma.ghostRegisteredFromTerminal.create({
 						data:{

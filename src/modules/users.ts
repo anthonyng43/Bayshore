@@ -685,7 +685,7 @@ export default class UserModule {
 				}
 			});
 
-            // TODO: Add notices to config
+            // Get notices from config
 			let notice = (Config.getConfig().notices || []);
 
             // Create the notice window objects
