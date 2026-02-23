@@ -63,7 +63,7 @@ export default class UserModule {
 					transferState: wm.wm.protobuf.TransferState.NOT_REGISTERED,
 				};
 
-				if (!body.cardChipId || !body.accessCode) 
+				if (!(body.cardChipId || body.accessCode)) 
 				{
 					msg.error = wm.wm.protobuf.ErrorCode.ERR_USER_SUCCEEDED;
 

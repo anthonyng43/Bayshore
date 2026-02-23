@@ -98,7 +98,9 @@ export async function competitionSchedule(date: any, competitionId: any)
             });
 
             // hof menu while OCM is ongoing
-            lastCompetitionId = ghostCompetitionSchedule.competitionId -1;
+            if(ghostCompetitionSchedule.competitionId > 1) {
+                lastCompetitionId = ghostCompetitionSchedule.competitionId -1;
+            }
         }
 
         // It's previous Competition (OCM) event

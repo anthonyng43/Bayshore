@@ -18,7 +18,7 @@ export async function saveGhostBattleResult(body: wm.protobuf.SaveGameResultRequ
     let OCMModePlay: boolean = false;
     
     // If the game was not retired / timed out
-    if (!body.retired || !body.timeup)
+    if (!(body.retired || body.timeup))
     {
         console.log('Saving Ghost Battle Result');
         
@@ -730,7 +730,7 @@ export async function saveGhostBattleResult(body: wm.protobuf.SaveGameResultRequ
 export async function deleteGhostTrail(body: wm.protobuf.SaveGameResultRequest, ghostTrailDays: number)
 {
     // if is not retired or time up
-    if  (!body.retired || !body.timeup)
+    if  (!(body.retired || body.timeup))
     {
         // if n days of ghost trail is set
         if(ghostTrailDays != 0)
