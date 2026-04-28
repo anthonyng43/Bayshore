@@ -288,7 +288,7 @@ export async function saveGhostBattleResult(body: wm.protobuf.SaveGameResultRequ
                             }
                             else if(body.rgResult?.path >= 56 && body.rgResult?.path <= 57){ // GID_PATH_HS
                                 area = Number(18);
-                                ramp = Number(Math.floor(Math.random() * 2) + 27);
+                                ramp = Number(Math.floor(Math.random() * 2) + 37);
                             }
 
                             path = Number(body.rgResult.path);

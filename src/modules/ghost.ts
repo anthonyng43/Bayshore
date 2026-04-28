@@ -422,7 +422,7 @@ export default class GhostModule {
 			let carTbyP: wm.wm.protobuf.LoadPathsAndTuningsResponse.CarTuningsByPath[] = [];
 
             // Loop GID_RUNAREA_*
-			for(let j=0; j<19; j++)
+			for(let j=0; j<15; j++)
 			{
                 // 14 - 16 are dummy area, 17 is C1 Closed
 				if(j >= 14){
