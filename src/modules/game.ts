@@ -284,8 +284,8 @@ export default class GameModule {
 					if(getCarCrown.status === 'finish')
 					{
 						let timestamp = body.playedAt - body.timestamp;
-
-						if(timestamp <= 60)
+						
+						if(timestamp <= 120)
 						{
 							console.log('Crown Force Finish Detected');
 
